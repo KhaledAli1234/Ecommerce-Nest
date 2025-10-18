@@ -4,3 +4,4 @@ export * from './utils';
 export * from './decorators';
 export * from './enums';
 export * from './services';
+export * from './entities';
