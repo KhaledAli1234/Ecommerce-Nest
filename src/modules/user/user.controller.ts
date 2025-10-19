@@ -1,14 +1,25 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Controller, Get, Headers, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUser } from 'src/commen';
+import { PreferredLanguageInterceptor, RoleEnum, User } from 'src/commen';
+import { Auth } from 'src/commen/decorators/auth.decorators';
+import type { UserDocument } from 'src/DB';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseInterceptors(PreferredLanguageInterceptor)
+  @Auth([RoleEnum.admin, RoleEnum.user])
   @Get()
-  allUsers(): { message: string; data: { users: IUser[] } } {
-    const users: IUser[] = this.userService.allUsers();
-    return { message: 'Done', data: { users } };
+  profile(
+    @Headers() headers: any,
+    @User() user: UserDocument,
+  ): { message: string } {
+    console.log({
+      lang: headers['accept-language'],
+      user,
+    });
+
+    return { message: 'Done' };
   }
 }

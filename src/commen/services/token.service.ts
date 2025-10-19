@@ -161,8 +161,11 @@ export class TokenService {
     const signatureLevel = await this.detectSignatureLevel(user.role);
     const signatures = await this.getSignature(signatureLevel);
     const jwtid = randomUUID();
+    const payload = {
+      sub: user._id.toString(),
+    };
     const access_token = await this.generateToken({
-      payload: { _id: user._id },
+      payload,
       options: {
         expiresIn: Number(process.env.ACCESS_TOKEN_EXPIRES_IN),
         secret: signatures.access_signature,
@@ -171,7 +174,7 @@ export class TokenService {
     });
 
     const refresh_token = await this.generateToken({
-      payload: { _id: user._id },
+      payload,
       options: {
         expiresIn: Number(process.env.REFRESH_TOKEN_EXPIRES_IN),
         secret: signatures.refresh_signature,

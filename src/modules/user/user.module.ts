@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { preAuth } from 'src/commen/middleware/authentication.Middleware';
 
 @Module({
   imports: [],
@@ -8,4 +9,8 @@ import { UserService } from './user.service';
   controllers: [UserController],
   exports: [],
 })
-export class UserModule {}
+export class UserModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(preAuth).forRoutes(UserController);
+  }
+}

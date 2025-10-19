@@ -6,8 +6,14 @@ import {
   Virtual,
 } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { GenderEnum, generatHash, providerEnum, RoleEnum } from 'src/commen';
+import {
+  GenderEnum,
+  LanguageEnum,
+  providerEnum,
+  RoleEnum,
+} from 'src/commen/enums';
 import { OtpDocument } from './Otp.model';
+import { generatHash } from 'src/commen';
 
 @Schema({
   timestamps: true,
@@ -90,6 +96,13 @@ export class User {
     default: RoleEnum.user,
   })
   role: RoleEnum;
+
+  @Prop({
+    type: String,
+    enum: LanguageEnum,
+    default: LanguageEnum.EN,
+  })
+  preferredLanguage: LanguageEnum;
 
   @Prop({
     type: Date,
