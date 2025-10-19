@@ -67,6 +67,11 @@ export class User {
 
   @Prop({
     type: String,
+  })
+  profileImage: string;
+
+  @Prop({
+    type: String,
     enum: providerEnum,
     default: providerEnum.SYSTEM,
   })
@@ -102,14 +107,9 @@ userSchema.virtual('otp', {
   ref: 'Otp',
 });
 userSchema.pre('save', async function (next) {
-  // this.wasNew = this.isNew;
   if (this.isModified('password')) {
     this.password = await generatHash(this.password);
   }
-  // if (this.isModified('confirmEmailOtp')) {
-  //   this.confirmEmailPlainOtp = this.confirmEmailOtp as string;
-  //   this.confirmEmailOtp = await generatHash(this.confirmEmailOtp as string);
-  // }
   next();
 });
 export type UserDocument = HydratedDocument<User>;

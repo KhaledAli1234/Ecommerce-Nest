@@ -5,9 +5,27 @@ import {
   IsStrongPassword,
   Length,
   Matches,
+  MinLength,
   ValidateIf,
 } from 'class-validator';
 import { IsMatch } from 'src/commen';
+
+export class SendForgotPasswordDTO {
+  @IsEmail()
+  email: string;
+}
+
+export class VerifyForgotPasswordDTO extends SendForgotPasswordDTO {
+  @IsNotEmpty()
+  @IsString()
+  otp: string;
+}
+
+export class ResetForgotPasswordDTO extends VerifyForgotPasswordDTO {
+  @IsString()
+  @MinLength(6)
+  password: string;
+}
 
 export class ResendConfirmEmailDTO {
   @IsEmail()
@@ -33,4 +51,10 @@ export class SignupBodyDTO extends LoginBodyDTO {
   })
   @IsMatch<string>(['password'])
   confirmPassword: string;
+}
+
+export class GmailDTO {
+  @IsString()
+  @IsNotEmpty()
+  idToken: string;
 }
