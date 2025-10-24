@@ -13,7 +13,7 @@ import {
   RoleEnum,
 } from 'src/commen/enums';
 import { OtpDocument } from './Otp.model';
-import { generatHash } from 'src/commen';
+import { generatHash, IUser } from 'src/commen';
 
 @Schema({
   timestamps: true,
@@ -21,7 +21,7 @@ import { generatHash } from 'src/commen';
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
 })
-export class User {
+export class User implements IUser {
   @Prop({
     type: String,
     required: true,
@@ -75,6 +75,11 @@ export class User {
     type: String,
   })
   profileImage: string;
+
+  @Prop({
+    type: String,
+  })
+  profilePicture: string;
 
   @Prop({
     type: String,
