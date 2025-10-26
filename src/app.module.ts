@@ -10,6 +10,7 @@ import { UserModule } from './modules/user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SharedAuthenticationModule } from './commen/modules/auth.module';
 import { S3Service } from './commen/services/multer.service';
+import { BrandModule } from './modules/brand/brand.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { S3Service } from './commen/services/multer.service';
     SharedAuthenticationModule,
     AuthenticationModule,
     UserModule,
+    BrandModule,
     CategoryModule,
     ProductModule,
   ],

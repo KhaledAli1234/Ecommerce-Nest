@@ -130,7 +130,13 @@ export abstract class DatabaseRepository<
     options?: QueryOptions<TDocument> | undefined;
     page?: number | 'all';
     size?: number;
-  }): Promise<TDocument[] | [] | Lean<TDocument>[] | any> {
+  }): Promise<{
+    docCount?: number;
+    limit?: number;
+    pages?: number;
+    currentPage?: number | undefined;
+    result?: TDocument[] | Lean<TDocument>[];
+  }> {
     let docCount: number | undefined = undefined;
     let pages: number | undefined = undefined;
     if (page !== 'all') {
@@ -212,6 +218,14 @@ export abstract class DatabaseRepository<
     update: UpdateQuery<TDocument>;
     options?: QueryOptions<TDocument> | null;
   }): Promise<TDocument | Lean<TDocument> | null> {
+    if (Array.isArray(update)) {
+      update.push({
+        $set: {
+          __v: { $add: ['$__v', 1] },
+        },
+      });
+      return await this.model.findOneAndUpdate(filter || {}, update, options);
+    }
     return this.model.findOneAndUpdate(
       filter,
       { ...update, $inc: { __v: 1 } },

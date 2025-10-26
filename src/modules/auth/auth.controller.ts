@@ -19,6 +19,7 @@ import {
   VerifyForgotPasswordDTO,
 } from './dto/auth.dto';
 import { LoginResponse } from './entities';
+import { IResponse, successResponse } from 'src/commen';
 
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller('auth')
@@ -26,70 +27,69 @@ export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post('signup')
-  async signup(@Body() body: SignupBodyDTO): Promise<{
-    message: string;
-  }> {
+  async signup(@Body() body: SignupBodyDTO): Promise<IResponse> {
     await this.authenticationService.signup(body);
-    return { message: 'Done' };
+    return successResponse();
   }
 
   @Post('resend-confirm-email')
-  async resendConfirmEmail(@Body() body: ResendConfirmEmailDTO): Promise<{
-    message: string;
-  }> {
+  async resendConfirmEmail(
+    @Body() body: ResendConfirmEmailDTO,
+  ): Promise<IResponse> {
     await this.authenticationService.resendConfirmEmail(body);
-    return { message: 'Done' };
+    return successResponse();
   }
 
   @Patch('confirm-Email')
-  async confirmEmail(@Body() body: ConfirmEmailDTO): Promise<{
-    message: string;
-  }> {
+  async confirmEmail(@Body() body: ConfirmEmailDTO): Promise<IResponse> {
     await this.authenticationService.confirmEmail(body);
-    return { message: 'Done' };
+    return successResponse();
   }
 
   @Post('login')
   @HttpCode(200)
-  async login(@Body() body: LoginBodyDTO): Promise<LoginResponse> {
+  async login(@Body() body: LoginBodyDTO): Promise<IResponse<LoginResponse>> {
     const credentials = await this.authenticationService.login(body);
-    return { message: 'Done', data: { credentials } };
+    return successResponse<LoginResponse>({ data: { credentials } });
   }
 
   @Patch('send-forgot-password')
   async sendForgotPassword(
     @Body() body: SendForgotPasswordDTO,
-  ): Promise<{ message: string }> {
+  ): Promise<IResponse> {
     await this.authenticationService.sendForgotPassword(body);
-    return { message: 'Done' };
+    return successResponse();
   }
 
   @Patch('verify-forgot-password')
   async verifyForgotPassword(
     @Body() body: VerifyForgotPasswordDTO,
-  ): Promise<{ message: string }> {
+  ): Promise<IResponse> {
     await this.authenticationService.verifyForgotPassword(body);
-    return { message: 'Done' };
+    return successResponse();
   }
 
   @Patch('reset-forgot-password')
   async resetForgotPassword(
     @Body() body: ResetForgotPasswordDTO,
-  ): Promise<{ message: string }> {
+  ): Promise<IResponse> {
     await this.authenticationService.resetForgotPassword(body);
-    return { message: 'Done' };
+    return successResponse();
   }
 
   @Post('signup-gmail')
-  async signupWithGmail(@Body() body: GmailDTO): Promise<LoginResponse> {
+  async signupWithGmail(
+    @Body() body: GmailDTO,
+  ): Promise<IResponse<LoginResponse>> {
     const credentials = await this.authenticationService.signupWithGmail(body);
-    return { message: 'Done', data: { credentials } };
+    return successResponse<LoginResponse>({ data: { credentials } });
   }
 
   @Post('login-gmail')
-  @HttpCode(200)
-  async loginWithGmail(@Body() body: GmailDTO): Promise<LoginResponse> {
+  async loginWithGmail(
+    @Body() body: GmailDTO,
+  ): Promise<IResponse<LoginResponse>> {
     const credentials = await this.authenticationService.loginWithGmail(body);
-    return { message: 'Done', data: { credentials } };
+    return successResponse<LoginResponse>({ data: { credentials } });
   }
 }

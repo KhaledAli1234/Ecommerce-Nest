@@ -1,7 +1,7 @@
-import { ICategory } from 'src/commen';
+import { IBrand } from 'src/commen';
 
-export class CategoryResponse {
-  category: ICategory;
+export class BrandResponse {
+  brand: IBrand;
 }
 
 export class GetAllResponse {
@@ -10,6 +10,6 @@ export class GetAllResponse {
     limit?: number;
     pages?: number;
     currentPage?: number | undefined;
-    result?: ICategory[];
+    result?: IBrand[];
   };
 }

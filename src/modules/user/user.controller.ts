@@ -15,31 +15,19 @@ import {
   PreferredLanguageInterceptor,
   RoleEnum,
   StorageEnum,
+  successResponse,
   User,
 } from 'src/commen';
 import { Auth } from 'src/commen/decorators/auth.decorators';
 import type { UserDocument } from 'src/DB';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { IUser } from '../../commen/interfaces';
+import { IResponse, IUser } from '../../commen/interfaces';
+import { profileResponse } from './entities';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseInterceptors(PreferredLanguageInterceptor)
-  @Auth([RoleEnum.admin, RoleEnum.user])
-  @Get()
-  profile(
-    @Headers() headers: any,
-    @User() user: UserDocument,
-  ): { message: string } {
-    console.log({
-      lang: headers['accept-language'],
-      user,
-    });
-
-    return { message: 'Done' };
-  }
 
   @UseInterceptors(
     FileInterceptor(
@@ -60,8 +48,8 @@ export class UserController {
       }),
     )
     file: Express.Multer.File,
-  ): Promise<{ message: string; data: { profile: IUser } }> {
+  ): Promise<IResponse<profileResponse>> {
     const profile = await this.userService.profileImage(file, user);
-    return { message: 'Done', data: { profile } };
+    return successResponse<profileResponse>({ data: { profile } });
   }
 }
