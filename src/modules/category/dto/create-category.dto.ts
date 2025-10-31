@@ -6,7 +6,7 @@ import {
   Validate,
 } from 'class-validator';
 import { Types } from 'mongoose';
-import { IBrand, ICategory, MongoDBIds } from 'src/commen';
+import { ICategory, MongoDBIds } from 'src/commen';
 
 export class CreateCategoryDto implements Partial<ICategory> {
   @MaxLength(25)

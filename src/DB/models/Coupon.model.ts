@@ -1,7 +1,8 @@
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types, UpdateQuery } from 'mongoose';
 import slugify from 'slugify';
-import { IBrand } from 'src/commen';
+import { ICoupon } from 'src/commen';
+import { couponEnum } from 'src/commen/enums/coupon.enum';
 
 @Schema({
   timestamps: true,
@@ -9,7 +10,7 @@ import { IBrand } from 'src/commen';
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
 })
-export class Brand implements IBrand {
+export class Coupon implements ICoupon {
   @Prop({
     type: String,
     required: true,
@@ -29,16 +30,50 @@ export class Brand implements IBrand {
   @Prop({
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 25,
   })
-  slogan: string;
+  image: string;
+
+  @Prop({
+    type: Number,
+    default: 1,
+  })
+  duration: number;
+
+  @Prop({
+    type: Number,
+    required: true,
+  })
+  descount: number;
+
+  @Prop({
+    type: Date,
+    required: true,
+  })
+  endDate: Date;
+
+  @Prop({
+    type: Date,
+    required: true,
+  })
+  startDate: Date;
 
   @Prop({
     type: String,
-    required: true,
+    enum: couponEnum,
+    default: couponEnum.Percent,
   })
-  image: string;
+  type: couponEnum;
+
+  @Prop({
+    type: [
+      {
+        type: Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+    ],
+  })
+  usedBy?: Types.ObjectId[];
 
   @Prop({
     type: Types.ObjectId,
@@ -64,16 +99,16 @@ export class Brand implements IBrand {
   restoredAt?: Date;
 }
 
-const brandSchema = SchemaFactory.createForClass(Brand);
+const couponSchema = SchemaFactory.createForClass(Coupon);
 
-brandSchema.pre('save', async function (next) {
+couponSchema.pre('save', async function (next) {
   if (this.isModified('name')) {
     this.slug = slugify(this.name);
   }
   next();
 });
-brandSchema.pre(['updateOne', 'findOneAndUpdate'], async function (next) {
-  const update = this.getUpdate() as UpdateQuery<BrandDocument>;
+couponSchema.pre(['updateOne', 'findOneAndUpdate'], async function (next) {
+  const update = this.getUpdate() as UpdateQuery<CouponDocument>;
   if (update.name) {
     this.setUpdate({ ...update, slug: slugify(update.name) });
   }
@@ -85,7 +120,7 @@ brandSchema.pre(['updateOne', 'findOneAndUpdate'], async function (next) {
   }
   next();
 });
-brandSchema.pre(['findOne', 'find'], async function (next) {
+couponSchema.pre(['findOne', 'find'], async function (next) {
   const query = this.getQuery();
   if (query.paranoId === false) {
     this.setQuery({ ...query });
@@ -95,7 +130,7 @@ brandSchema.pre(['findOne', 'find'], async function (next) {
   next();
 });
 
-export type BrandDocument = HydratedDocument<Brand>;
-export const BrandModel = MongooseModule.forFeature([
-  { name: Brand.name, schema: brandSchema },
+export type CouponDocument = HydratedDocument<Coupon>;
+export const CouponModel = MongooseModule.forFeature([
+  { name: Coupon.name, schema: couponSchema },
 ]);

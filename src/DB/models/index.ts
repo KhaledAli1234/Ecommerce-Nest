@@ -5,3 +5,5 @@ export * from './Brand.model';
 export * from './Category.model';
 export * from './Product.model';
 export * from './Cart.model';
+export * from './Coupon.model';
+export * from './Order.model';
