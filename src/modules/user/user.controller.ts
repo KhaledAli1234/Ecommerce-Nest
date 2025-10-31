@@ -28,7 +28,16 @@ import { profileResponse } from './entities';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Auth([RoleEnum.user, RoleEnum.admin, RoleEnum.superAdmin])
+  @Get()
+  async profile(
+    @User() user: UserDocument,
+  ): Promise<IResponse<profileResponse>> {
+    const profile = await this.userService.profile(user);
+    return successResponse<profileResponse>({ data: { profile } });
+  }
 
+  
   @UseInterceptors(
     FileInterceptor(
       'profileImage',

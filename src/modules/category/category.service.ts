@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { GetAllDto, UpdateCategoryDto } from './dto/update-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { S3Service } from 'src/commen/services/multer.service';
 import {
   BrandRepository,
@@ -15,7 +15,7 @@ import {
 } from 'src/DB';
 import { Types } from 'mongoose';
 import { Lean } from 'src/DB/repository/database.repository';
-import { FolderEnum } from 'src/commen';
+import { FolderEnum, GetAllDto } from 'src/commen';
 import { randomUUID } from 'crypto';
 
 @Injectable()

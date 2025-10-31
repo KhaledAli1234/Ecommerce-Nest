@@ -7,10 +7,10 @@ import {
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { BrandDocument, BrandRepository, UserDocument } from 'src/DB';
 import { S3Service } from 'src/commen/services/multer.service';
-import { GetAllDto, UpdateBrandDto } from './dto/update-brand.dto';
+import { UpdateBrandDto } from './dto/update-brand.dto';
 import { Types } from 'mongoose';
 import { Lean } from 'src/DB/repository/database.repository';
-import { FolderEnum } from 'src/commen';
+import { FolderEnum, GetAllDto } from 'src/commen';
 
 @Injectable()
 export class BrandService {

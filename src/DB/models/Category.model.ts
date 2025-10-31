@@ -44,12 +44,14 @@ export class Category implements ICategory {
   })
   assetFolderId: string;
 
-  @Prop([
-    {
-      type: Types.ObjectId,
-      ref: 'Brand',
-    },
-  ])
+  @Prop({
+    type: [
+      {
+        type: Types.ObjectId,
+        ref: 'Brand',
+      },
+    ],
+  })
   brands?: Types.ObjectId[];
 
   @Prop({

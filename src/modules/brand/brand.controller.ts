@@ -19,17 +19,19 @@ import {
   Auth,
   cloudFileUpload,
   fileValidation,
+  GetAllDto,
+  GetAllResponse,
+  IBrand,
   IResponse,
   successResponse,
   User,
 } from 'src/commen';
 import type { UserDocument } from 'src/DB';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { BrandResponse, GetAllResponse } from './entities/brand.entity';
+import { BrandResponse } from './entities/brand.entity';
 
 import {
   BrandParamsDto,
-  GetAllDto,
   UpdateBrandDto,
 } from './dto/update-brand.dto';
 import { endPoint } from './brand.authorization.module';
@@ -129,18 +131,18 @@ export class BrandController {
   }
 
   @Get()
-  async findAll(@Query() query: GetAllDto): Promise<IResponse<GetAllResponse>> {
+  async findAll(@Query() query: GetAllDto): Promise<IResponse<GetAllResponse<IBrand>>> {
     const result = await this.brandService.findAll(query);
-    return successResponse<GetAllResponse>({ data: { result } });
+    return successResponse<GetAllResponse<IBrand>>({ data: { result } });
   }
 
   @Auth(endPoint.create)
   @Get('archive')
   async findAllArchives(
     @Query() query: GetAllDto,
-  ): Promise<IResponse<GetAllResponse>> {
+  ): Promise<IResponse<GetAllResponse<IBrand>>> {
     const result = await this.brandService.findAll(query, true);
-    return successResponse<GetAllResponse>({ data: { result } });
+    return successResponse<GetAllResponse<IBrand>>({ data: { result } });
   }
 
   @Get(':brandId')

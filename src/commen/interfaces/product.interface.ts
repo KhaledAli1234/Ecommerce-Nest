@@ -11,7 +11,7 @@ export interface IProduct {
   description?: string;
   images: string[];
 
-  originalPrice: number;
+  mainPrice: number;
   discountPercent: number;
   salePrice: number;
 

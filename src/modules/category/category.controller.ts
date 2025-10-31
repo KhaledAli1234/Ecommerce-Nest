@@ -19,16 +19,18 @@ import {
   Auth,
   cloudFileUpload,
   fileValidation,
+  GetAllDto,
+  GetAllResponse,
+  ICategory,
   IResponse,
   successResponse,
   User,
 } from 'src/commen';
 import type { UserDocument } from 'src/DB';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { CategoryResponse, GetAllResponse } from './entities/category.entity';
+import { CategoryResponse } from './entities/category.entity';
 import {
   CategoryParamsDto,
-  GetAllDto,
   UpdateCategoryDto,
 } from './dto/update-category.dto';
 import { endPoint } from './category.authorization.module';
@@ -138,18 +140,20 @@ export class CategoryController {
   }
 
   @Get()
-  async findAll(@Query() query: GetAllDto): Promise<IResponse<GetAllResponse>> {
+  async findAll(
+    @Query() query: GetAllDto,
+  ): Promise<IResponse<GetAllResponse<ICategory>>> {
     const result = await this.categoryService.findAll(query);
-    return successResponse<GetAllResponse>({ data: { result } });
+    return successResponse<GetAllResponse<ICategory>>({ data: { result } });
   }
 
   @Auth(endPoint.create)
   @Get('archive')
   async findAllArchives(
     @Query() query: GetAllDto,
-  ): Promise<IResponse<GetAllResponse>> {
+  ): Promise<IResponse<GetAllResponse<ICategory>>> {
     const result = await this.categoryService.findAll(query, true);
-    return successResponse<GetAllResponse>({ data: { result } });
+    return successResponse<GetAllResponse<ICategory>>({ data: { result } });
   }
 
   @Get(':categoryId')

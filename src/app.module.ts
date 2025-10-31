@@ -11,6 +11,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { SharedAuthenticationModule } from './commen/modules/auth.module';
 import { S3Service } from './commen/services/multer.service';
 import { BrandModule } from './modules/brand/brand.module';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { BrandModule } from './modules/brand/brand.module';
     BrandModule,
     CategoryModule,
     ProductModule,
+    CartModule
   ],
   controllers: [AppController],
   providers: [AppService , S3Service],

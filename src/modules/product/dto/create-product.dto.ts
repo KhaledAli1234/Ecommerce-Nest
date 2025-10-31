@@ -26,7 +26,7 @@ export class CreateProductDto implements Partial<IProduct> {
   @Type(() => Number)
   @IsPositive()
   @IsNumber()
-  originalPrice: number;
+  mainPrice: number;
   @Type(() => Number)
   @IsPositive()
   @IsNumber()

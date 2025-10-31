@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { IUser, StorageEnum } from 'src/commen';
 import { S3Service } from 'src/commen/services/multer.service';
-import { UserDocument } from 'src/DB';
+import { UserDocument, UserRepository } from 'src/DB';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly s3Service: S3Service) {}
+  constructor(
+    private readonly s3Service: S3Service,
+    private readonly userRepository: UserRepository,
+  ) {}
 
-  allUsers(): IUser[] {
-    return [ ];
+  async profile(user: UserDocument): Promise<UserDocument> {
+    const profile = (await this.userRepository.findOne({
+      filter: { _id: user._id },
+      options: { populate: [{ path: 'wishlist' }] },
+    })) as UserDocument;
+    return profile;
   }
 
   async profileImage(

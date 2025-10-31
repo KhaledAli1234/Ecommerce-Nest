@@ -70,7 +70,7 @@ export class Product implements IProduct {
     type: Number,
     required: true,
   })
-  originalPrice: number;
+  mainPrice: number;
 
   @Prop({
     type: Number,

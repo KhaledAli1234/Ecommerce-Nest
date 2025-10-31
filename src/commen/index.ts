@@ -8,3 +8,4 @@ export * from './entities';
 export * from './middleware';
 export * from './modules';
 export * from './interceptors';
+export * from './dtos';
