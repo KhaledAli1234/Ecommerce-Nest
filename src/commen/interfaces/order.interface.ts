@@ -10,6 +10,7 @@ export interface IOrderProduct {
   productId: Types.ObjectId | IProduct;
   quantity: number;
   unitPrice: number;
+  finalPrice: number;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,6 +24,8 @@ export interface IOrder {
   phone: string;
   note?: string;
   cancelReason?: string;
+
+  intentId?: string;
 
   status: OrderStatusEnum;
   payment: PaymentEnum;

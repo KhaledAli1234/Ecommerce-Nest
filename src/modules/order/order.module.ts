@@ -11,6 +11,8 @@ import {
   ProductModel,
   ProductRepository,
 } from 'src/DB';
+import { CartService } from '../cart/cart.service';
+import { PaymentService } from 'src/commen';
 
 @Module({
   imports: [OrderModel, CartModel, ProductModel, CouponModel],
@@ -21,6 +23,8 @@ import {
     ProductRepository,
     CartRepository,
     CouponRepository,
+    CartService,
+    PaymentService,
   ],
 })
 export class OrderModule {}

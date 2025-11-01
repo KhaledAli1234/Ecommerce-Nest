@@ -26,6 +26,11 @@ export class OrderProduct implements IOrderProduct {
     required: true,
   })
   unitPrice: number;
+  @Prop({
+    type: Number,
+    required: true,
+  })
+  finalPrice: number;
 }
 
 @Schema({
@@ -65,6 +70,11 @@ export class Order implements IOrder {
   cancelReason?: string;
 
   @Prop({
+    type: String,
+  })
+  intentId: string;
+
+  @Prop({
     type: Types.ObjectId,
     ref: 'Coupon',
   })
@@ -74,7 +84,7 @@ export class Order implements IOrder {
     type: Number,
     default: 0,
   })
-  discount?: number;
+  discount: number;
 
   @Prop({
     type: Date,
@@ -139,9 +149,15 @@ export class Order implements IOrder {
   })
   restoredAt?: Date;
 }
-
+export type OrderDocument = HydratedDocument<Order>;
 const orderSchema = SchemaFactory.createForClass(Order);
 
+orderSchema.pre('save', async function (next) {
+  if (this.isModified('total')) {
+    this.subtotal = this.total - this.total * this.discount;
+  }
+  next();
+});
 orderSchema.pre(['updateOne', 'findOneAndUpdate'], async function (next) {
   const query = this.getQuery();
   if (query.paranoId === false) {
@@ -160,8 +176,6 @@ orderSchema.pre(['findOne', 'find'], async function (next) {
   }
   next();
 });
-
-export type OrderDocument = HydratedDocument<Order>;
 export const OrderModel = MongooseModule.forFeature([
   { name: Order.name, schema: orderSchema },
 ]);
