@@ -2,6 +2,7 @@ import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types, UpdateQuery } from 'mongoose';
 import slugify from 'slugify';
 import { IBrand, ICategory, IProduct } from 'src/commen';
+import { Category } from './Category.model';
 
 @Schema({
   timestamps: true,
@@ -83,6 +84,23 @@ export class Product implements IProduct {
     default: 0,
   })
   soldItems: number;
+
+  @Prop([
+    {
+      size: { type: String, required: true },
+      color: { type: String, required: true },
+      price: { type: Number, required: true },
+      sku: { type: String, required: true },
+      stock: { type: Number, default: 0 },
+    },
+  ])
+  variants: {
+    size: string;
+    color: string;
+    price: number;
+    sku: string;
+    stock: number;
+  }[];
 
   @Prop({
     type: Types.ObjectId,

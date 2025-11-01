@@ -1,7 +1,8 @@
+import mongoose from 'mongoose';
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types, UpdateQuery } from 'mongoose';
 import slugify from 'slugify';
-import { IBrand, ICategory } from 'src/commen';
+import { ICategory } from 'src/commen';
 
 @Schema({
   timestamps: true,
@@ -80,6 +81,11 @@ export class Category implements ICategory {
 
 const categorySchema = SchemaFactory.createForClass(Category);
 
+categorySchema.virtual('products', {
+  ref: 'Product',
+  localField: '_id',
+  foreignField: 'category',
+});
 categorySchema.pre('save', async function (next) {
   if (this.isModified('name')) {
     this.slug = slugify(this.name);
@@ -106,6 +112,12 @@ categorySchema.pre(['findOne', 'find'], async function (next) {
   } else {
     this.setQuery({ ...query, freezedAt: { $exists: false } });
   }
+  next();
+});
+categorySchema.pre(['findOneAndDelete'], async function (next) {
+  const categoryId = this.getQuery()['_id'];
+  await mongoose.model('Brand').deleteMany({ category: categoryId });
+  await mongoose.model('Product').deleteMany({ category: categoryId });
   next();
 });
 

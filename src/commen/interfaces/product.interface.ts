@@ -19,9 +19,10 @@ export interface IProduct {
   soldItems: number;
   assetFolderId: string;
 
-
   category: Types.ObjectId | ICategory;
   brand: Types.ObjectId | IBrand;
+
+  variants: IProductVariant[]
 
   createdBy: Types.ObjectId | IUser;
   updatedBy?: Types.ObjectId | IUser;
@@ -31,4 +32,12 @@ export interface IProduct {
 
   freezedAt?: Date;
   restoredAt?: Date;
+}
+
+export interface IProductVariant {
+  size: string
+  color: string
+  price: number
+  sku: string
+  stock: number
 }
