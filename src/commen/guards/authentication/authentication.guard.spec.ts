@@ -1,7 +1,14 @@
+import { Reflector } from '@nestjs/core';
 import { AuthenticationGuard } from './authentication.guard';
+import { TokenService } from 'src/commen/services';
 
 describe('AuthenticationGuard', () => {
   it('should be defined', () => {
-    expect(new AuthenticationGuard()).toBeDefined();
+    const mockTokenService = {} as TokenService;
+    const mockReflector = {} as Reflector;
+
+    expect(
+      new AuthenticationGuard(mockTokenService, mockReflector),
+    ).toBeDefined();
   });
 });

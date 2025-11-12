@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { tokenName } from 'src/commen/decorators';
 import { TokenEnum } from 'src/commen/enums';
 import { TokenService } from 'src/commen/services';
+import { getSocketAuth } from 'src/commen/utils/socket';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -30,12 +31,17 @@ export class AuthenticationGuard implements CanActivate {
       //   const RpcCtx = context.switchToRpc();
       //   break;
 
-      // case 'ws':
-      //   const WsCtx = context.switchToWs();
-      //   break;
+      case 'ws':
+        const Ws_context = context.switchToWs();
+        req = Ws_context.getClient();
+        authorization = getSocketAuth(req);
+        break;
 
       default:
         break;
+    }
+    if (!authorization) {
+      return false
     }
 
     const { user, decoded } = await this.tokenService.decodedToken({

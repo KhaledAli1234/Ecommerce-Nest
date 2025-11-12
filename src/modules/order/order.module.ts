@@ -13,11 +13,13 @@ import {
 } from 'src/DB';
 import { CartService } from '../cart/cart.service';
 import { PaymentService } from 'src/commen';
+import { RealTimeGateway } from '../gateway/gateway';
 
 @Module({
   imports: [OrderModel, CartModel, ProductModel, CouponModel],
   controllers: [OrderController],
   providers: [
+    RealTimeGateway,
     OrderService,
     OrderRepository,
     ProductRepository,

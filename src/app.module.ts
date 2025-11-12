@@ -14,6 +14,7 @@ import { BrandModule } from './modules/brand/brand.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CouponModule } from './modules/coupon/coupon.module';
 import { OrderModule } from './modules/order/order.module';
+import { RealTimeModule } from './modules/gateway/gateway.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { OrderModule } from './modules/order/order.module';
     CartModule,
     CouponModule,
     OrderModule,
+    RealTimeModule
   ],
   controllers: [AppController],
   providers: [AppService, S3Service],

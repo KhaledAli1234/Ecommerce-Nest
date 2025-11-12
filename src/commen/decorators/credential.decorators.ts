@@ -5,16 +5,16 @@ export const User = createParamDecorator(
     let req: any;
     switch (context.getType()) {
       case 'http':
-        req = context.switchToHttp().getRequest();
+        req = context.switchToHttp().getRequest().credentials.user;
         break;
 
       // case 'rpc':
       //   const RpcCtx = context.switchToRpc();
-      //   break;
+      //   break; 
 
-      // case 'ws':
-      //   const WsCtx = context.switchToWs();
-      //   break;
+      case 'ws':
+        req = context.switchToWs().getClient().credentials.user;
+        break;
 
       default:
         break;

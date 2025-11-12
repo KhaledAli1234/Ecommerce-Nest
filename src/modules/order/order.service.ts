@@ -5,7 +5,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import {
   CartRepository,
   CouponRepository,
@@ -27,6 +26,7 @@ import { CartService } from '../cart/cart.service';
 import { Types } from 'mongoose';
 import Stripe from 'stripe';
 import { Request } from 'express';
+import { RealTimeGateway } from '../gateway/gateway';
 
 @Injectable()
 export class OrderService {
@@ -37,6 +37,7 @@ export class OrderService {
     private readonly cartRepository: CartRepository,
     private readonly cartService: CartService,
     private readonly paymentService: PaymentService,
+    private readonly realTimeGateway: RealTimeGateway,
   ) {}
 
   async webhook(req: Request) {
@@ -141,8 +142,9 @@ export class OrderService {
       coupon.usedBy.push(user._id);
       await coupon.save();
     }
+    const stockProducts: { productId: Types.ObjectId; stock: number }[] = [];
     for (const product of cart.products) {
-      await this.productRepository.updateOne({
+      const updatedProduct = (await this.productRepository.findOneAndUpdate({
         filter: {
           _id: product.productId,
           stock: { $gte: product.quantity },
@@ -150,8 +152,13 @@ export class OrderService {
         update: {
           $inc: { __v: 1, stock: -product.quantity },
         },
+      })) as ProductDocument;
+      stockProducts.push({
+        productId: updatedProduct._id,
+        stock: updatedProduct?.stock,
       });
     }
+    this.realTimeGateway.changeProductStock(stockProducts)
     await this.cartService.remove(user);
     return order;
   }
