@@ -9,3 +9,4 @@ export * from './middleware';
 export * from './modules';
 export * from './interceptors';
 export * from './dtos';
+export * from './guards';

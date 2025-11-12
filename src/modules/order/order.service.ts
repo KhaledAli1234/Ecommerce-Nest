@@ -17,6 +17,8 @@ import {
 } from 'src/DB';
 import {
   couponEnum,
+  GetAllDto,
+  GetAllGraphDto,
   OrderStatusEnum,
   PaymentEnum,
   PaymentService,
@@ -27,6 +29,7 @@ import { Types } from 'mongoose';
 import Stripe from 'stripe';
 import { Request } from 'express';
 import { RealTimeGateway } from '../gateway/gateway';
+import { Lean } from 'src/DB/repository/database.repository';
 
 @Injectable()
 export class OrderService {
@@ -158,7 +161,7 @@ export class OrderService {
         stock: updatedProduct?.stock,
       });
     }
-    this.realTimeGateway.changeProductStock(stockProducts)
+    this.realTimeGateway.changeProductStock(stockProducts);
     await this.cartService.remove(user);
     return order;
   }
@@ -264,5 +267,26 @@ export class OrderService {
     await order.save();
 
     return session.url;
+  }
+
+  async findAll(
+    data: GetAllGraphDto = {},
+    archive: boolean = false,
+  ): Promise<{
+    docCount?: number;
+    limit?: number;
+    pages?: number;
+    currentPage?: number | undefined;
+    result?: OrderDocument[] | Lean<OrderDocument>[];
+  }> {
+    const { size, page, search } = data;
+    const result = await this.orderRepository.paginate({
+      filter: {
+        ...(archive ? { paranoId: false, freezedAt: { $exists: true } } : {}),
+      },
+      page,
+      size,
+    });
+    return result;
   }
 }

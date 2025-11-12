@@ -1,0 +1,124 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type OneUserResponse {
+  _id: ID!
+  changeCredentialsTime: DateTime
+  confirmedAt: DateTime
+  email: String!
+  firstName: String!
+  gender: GenderEnum!
+  lastName: String!
+  password: String
+  preferredLanguage: LanguageEnum!
+  profileImage: String
+  profilePicture: String
+  provider: providerEnum!
+  role: RoleEnum!
+  username: String
+  wishlist: [ID!]
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum GenderEnum {
+  male
+  female
+}
+
+enum LanguageEnum {
+  AR
+  EN
+}
+
+enum providerEnum {
+  SYSTEM
+  GOOGLE
+}
+
+enum RoleEnum {
+  user
+  admin
+  superAdmin
+}
+
+type OneOrderProductResponse {
+  _id: ID!
+  productId: ID!
+  quantity: Float!
+  unitPrice: Float!
+  finalPrice: Float!
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type OneOrderResponse {
+  _id: ID!
+  orderId: String!
+  address: String!
+  note: String
+  phone: String!
+  coupon: ID
+  subtotal: Float!
+  status: OrderStatusEnum!
+  discount: Float
+  total: Float!
+  intentId: String
+  paidAt: DateTime
+  payment: PaymentEnum!
+  products: [OneOrderProductResponse!]!
+  patmentIntent: String
+  cancelReason: String
+  createdBy: OneUserResponse!
+  updatedBy: ID
+  freezedAt: DateTime
+  restoredAt: DateTime
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+enum OrderStatusEnum {
+  Pending
+  Placed
+  OnWay
+  Delivered
+  Cancel
+}
+
+enum PaymentEnum {
+  Cash
+  Card
+}
+
+type GetAllOrdersResponse {
+  docCount: Float
+  limit: Float
+  pages: Float
+  currentPage: Float
+  result: [OneOrderResponse!]!
+}
+
+type Query {
+  """retrieve all Orders"""
+  allOrders(data: GetAllGraphDto): GetAllOrdersResponse!
+
+  """first welcome point🍀"""
+  welcome: String!
+}
+
+input GetAllGraphDto {
+  page: Float
+  size: Float
+  search: String
+}
+
+type Mutation {
+  """first welcome point🍀"""
+  welcome: String!
+}

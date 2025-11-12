@@ -14,6 +14,7 @@ import {
 import { CartService } from '../cart/cart.service';
 import { PaymentService } from 'src/commen';
 import { RealTimeGateway } from '../gateway/gateway';
+import { OrderResolver } from './order.resolver';
 
 @Module({
   imports: [OrderModel, CartModel, ProductModel, CouponModel],
@@ -27,6 +28,7 @@ import { RealTimeGateway } from '../gateway/gateway';
     CouponRepository,
     CartService,
     PaymentService,
+    OrderResolver,
   ],
 })
 export class OrderModule {}
