@@ -12,6 +12,7 @@ import {
   UsePipes,
   ValidationPipe,
   Query,
+  Inject,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -29,19 +30,27 @@ import {
   GetAllResponse,
   IProduct,
   IResponse,
+  RedisCacheInterceptor,
   RoleEnum,
   StorageEnum,
   successResponse,
+  TTL,
   User,
 } from 'src/commen';
 import { endPoint } from './product.authorization.module';
 import type { UserDocument } from 'src/DB';
 import { ProductResponse } from './entities/product.entity';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { type RedisClientType } from 'redis';
+import { Observable, of } from 'rxjs';
 
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    @Inject('REDIS_CLIENT') private readonly redisClient: RedisClientType,
+    private readonly productService: ProductService,
+  ) {}
 
   @UseInterceptors(
     FilesInterceptor(
@@ -145,12 +154,14 @@ export class ProductController {
     return successResponse();
   }
 
+  @TTL(50)
+  @UseInterceptors(RedisCacheInterceptor)
   @Get()
   async findAll(
     @Query() query: GetAllDto,
-  ): Promise<IResponse<GetAllResponse<IProduct>>> {
+  ): Promise<Observable<IResponse<GetAllResponse<IProduct>>>> {
     const result = await this.productService.findAll(query);
-    return successResponse<GetAllResponse<IProduct>>({ data: { result } });
+    return of(successResponse<GetAllResponse<IProduct>>({ data: { result } }));
   }
 
   @Auth(endPoint.create)
